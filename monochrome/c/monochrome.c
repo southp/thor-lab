@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     }
     SDL_QueryTexture(texture, NULL, NULL, &w, &h);
 
-    SDL_SetWindowTitle(window, argv[i]);
+    SDL_SetWindowTitle(window, img_name);
     SDL_SetWindowSize(window, w, h);
     SDL_ShowWindow(window);
 
