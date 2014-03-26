@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
         SDL_Delay(100);
     }
     SDL_DestroyTexture(texture);
-
+    SDL_FreeSurface(img_surface);
     SDL_Quit();
     return 0;
 }
