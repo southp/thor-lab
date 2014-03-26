@@ -32,123 +32,83 @@ static void draw_background(SDL_Renderer *renderer, int w, int h)
 
 int main(int argc, char *argv[])
 {
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    SDL_Texture *texture;
     Uint32 flags;
     int i, w, h, done;
-    SDL_Event event;
+
+    SDL_Window   *window = NULL;
+    SDL_Renderer *renderer = NULL;
+    SDL_Texture  *texture = NULL;
+    SDL_Surface  *img_surface = NULL;
+    SDL_Event     event;
+
     const char *saveFile = NULL;
+    const char *img_name = NULL;
 
-    /* Check command line usage */
-    if ( ! argv[1] ) {
-        fprintf(stderr, "Usage: %s [-fullscreen] [-save file.png] <image_file> ...\n", argv[0]);
-        return(1);
+    if(argc != 2)
+    {
+        fprintf(stderr, "Usage: %s <image_file> \n", argv[0]);
+        return -1;
     }
 
-    flags = SDL_WINDOW_HIDDEN;
-    for ( i=1; argv[i]; ++i ) {
-        if ( strcmp(argv[i], "-fullscreen") == 0 ) {
-            SDL_ShowCursor(0);
-            flags |= SDL_WINDOW_FULLSCREEN;
-        }
-    }
+    img_name = argv[1];
 
-    if (SDL_CreateWindowAndRenderer(0, 0, flags, &window, &renderer) < 0) {
+    if (SDL_CreateWindowAndRenderer(0, 0, flags, &window, &renderer) < 0)
+    {
         fprintf(stderr, "SDL_CreateWindowAndRenderer() failed: %s\n", SDL_GetError());
-        return(2);
+        return -2;
     }
 
-    for ( i=1; argv[i]; ++i ) {
-        if ( strcmp(argv[i], "-fullscreen") == 0 ) {
-            continue;
-        }
+    img_surface = IMG_Load(img_name);
+    if(!img_surface)
+    {
+        fprintf(stderr, "Failed to load %s.\n", img_name);
+        return -3;
+    }
 
-        if ( strcmp(argv[i], "-save") == 0 && argv[i+1] ) {
-            ++i;
-            saveFile = argv[i];
-            continue;
-        }
+    texture = SDL_CreateTextureFromSurface(renderer, img_surface);
+    if (!texture)
+    {
+        fprintf(stderr, "Couldn't create texture from surface!\n");
+        return -1;
+    }
+    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
 
-        /* Open the image file */
-        texture = IMG_LoadTexture(renderer, argv[i]);
-        if (!texture) {
-            fprintf(stderr, "Couldn't load %s: %s\n", argv[i], SDL_GetError());
-            continue;
-        }
-        SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+    SDL_SetWindowTitle(window, argv[i]);
+    SDL_SetWindowSize(window, w, h);
+    SDL_ShowWindow(window);
 
-        /* Save the image file, if desired */
-        if ( saveFile ) {
-            SDL_Surface *surface = IMG_Load(argv[i]);
-            if (surface) {
-                if ( IMG_SavePNG(surface, saveFile) < 0 ) {
-                    fprintf(stderr, "Couldn't save %s: %s\n", saveFile, SDL_GetError());
-                }
-            } else {
-                fprintf(stderr, "Couldn't load %s: %s\n", argv[i], SDL_GetError());
-            }
-        }
-
-        /* Show the window */
-        SDL_SetWindowTitle(window, argv[i]);
-        SDL_SetWindowSize(window, w, h);
-        SDL_ShowWindow(window);
-
-        done = 0;
-        while ( ! done ) {
-            while ( SDL_PollEvent(&event) ) {
-                switch (event.type) {
-                    case SDL_KEYUP:
-                        switch (event.key.keysym.sym) {
-                            case SDLK_LEFT:
-                                if ( i > 1 ) {
-                                    i -= 2;
-                                    done = 1;
-                                }
-                                break;
-                            case SDLK_RIGHT:
-                                if ( argv[i+1] ) {
-                                    done = 1;
-                                }
-                                break;
-                            case SDLK_ESCAPE:
-                            case SDLK_q:
-                                argv[i+1] = NULL;
-                            /* Drop through to done */
-                            case SDLK_SPACE:
-                            case SDLK_TAB:
+    done = 0;
+    while(!done)
+    {
+        while(SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+                case SDL_KEYUP:
+                    switch (event.key.keysym.sym) {
+                        case SDLK_ESCAPE:
                             done = 1;
+                        default:
                             break;
-                            default:
-                            break;
-                        }
-                        break;
-                    case SDL_MOUSEBUTTONDOWN:
-                        done = 1;
-                        break;
-                    case SDL_QUIT:
-                        argv[i+1] = NULL;
-                        done = 1;
-                        break;
-                    default:
-                        break;
-                }
+                    }
+                    break;
+                case SDL_QUIT:
+                    done = 1;
+                    break;
+                default:
+                    break;
             }
-            /* Draw a background pattern in case the image has transparency */
-            draw_background(renderer, w, h);
-
-            /* Display the image */
-            SDL_RenderCopy(renderer, texture, NULL, NULL);
-            SDL_RenderPresent(renderer);
-
-            SDL_Delay(100);
         }
-        SDL_DestroyTexture(texture);
-    }
+        draw_background(renderer, w, h);
 
-    /* We're done! */
+        SDL_RenderCopy(renderer, texture, NULL, NULL);
+        SDL_RenderPresent(renderer);
+
+        SDL_Delay(100);
+    }
+    SDL_DestroyTexture(texture);
+
     SDL_Quit();
-    return(0);
+    return 0;
 }
 
