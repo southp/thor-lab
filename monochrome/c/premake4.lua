@@ -1,4 +1,5 @@
-project "c_monochrome"
+project "c_st"
+    language "C"
     kind "ConsoleApp"
 
     links {

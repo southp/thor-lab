@@ -1,6 +1,5 @@
 solution "monochrome"
     configurations {"debug", "release"}
-    language  "C"
     targetdir "bin"
     location  "build"
 
