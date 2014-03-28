@@ -1,3 +1,4 @@
+import thor.unmanaged;
 
 @native
 class Window
@@ -8,6 +9,9 @@ class Window
     public function isQuit() : bool;
 
     public function handleEvent() : void;
+
+    private var _ptr_to_window : thor.unmanaged.ptr_<int8>;
+    private var _ptr_to_render : thor.unmanaged.ptr_<int8>;
 }
 
 @native
