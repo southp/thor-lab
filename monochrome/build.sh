@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if ! test -d ../monobuild
+if ! test -e ../mono_build
 then
     premake4 gmake
 fi
 
-if test "$1" == "thor"
+if test "$1" = "thor"
 then
     cd thor
     cd imgutil
@@ -13,7 +13,7 @@ then
     cd ../monochrome
     thorc b d
 
-elif test "$1" == "c_st"
+elif test "$1" = "c_st"
 then
     cd ../mono_build
     make c_st
