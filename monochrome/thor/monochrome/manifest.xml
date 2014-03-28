@@ -1,6 +1,7 @@
-<project name="monochrome" author="" signature="" version="0.0.0.1" bundle_type="jit" using_64bit="true" id="2a406d19-11aa-499d-a28b-9fd440e4a26c">
+<project name="monochrome" author="" signature="" version="0.0.0.1" bundle_type="native" using_64bit="true" id="2a406d19-11aa-499d-a28b-9fd440e4a26c">
     <dependency>
         <bundle name="imgutil.bundle" lpath="../imgutil/bin/" />
+        <native_shared_library name="SDL2" lpath="/usr/local/lib" />
     </dependency>
     <platform arch=""/>
 </project>
