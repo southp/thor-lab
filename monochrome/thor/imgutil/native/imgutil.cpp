@@ -20,10 +20,17 @@ public:
     bool isQuit();
 
     void handleEvent();
+
+private:
+    SDL_Window   *_window;
+    SDL_Renderer *_render;
 };
 
-Window::Window(int32 x, int32 y)
+Window::Window(int32 x, int32 y) :
+    _window(nullptr),
+    _render(nullptr)
 {
+    SDL_CreateWindowAndRenderer(0, 0, 0, &_window, &_render);
 }
 
 Window::~Window()
@@ -40,6 +47,18 @@ bool Window::isQuit()
 void Window::handleEvent()
 {
     std::cout << "HAHA" << std::endl;
+}
+
+bool initialize()
+{
+    int result = SDL_Init(SDL_INIT_EVERYTHING);
+
+    return result == 0;
+}
+
+void finialize()
+{
+    SDL_Quit();
 }
 
 }

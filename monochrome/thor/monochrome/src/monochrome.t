@@ -4,6 +4,12 @@ import .= thor.container;
 @entry
 task test()
 {
+    if(!initialize())
+    {
+        println("Failed to initialize!");
+        exit(-1);
+    }
+
     var window = new Window(0, 0);
     var flag = new Flag;
     var options = flag.getRaw();
@@ -19,7 +25,10 @@ task test()
 
     var handle_event = lambda() : void{
         if(window.isQuit())
+        {
+            finalize();
             exit(0);
+        }
         else
             window.handleEvent();
 

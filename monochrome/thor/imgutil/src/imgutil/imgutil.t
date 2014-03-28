@@ -10,3 +10,8 @@ class Window
     public function handleEvent() : void;
 }
 
+@native
+function initialize() : bool;
+
+@native
+function finalize() : void;
