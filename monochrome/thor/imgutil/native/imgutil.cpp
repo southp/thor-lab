@@ -5,6 +5,7 @@
 
 #include "thor/PrimitiveTypes.h"
 #include "thor/lang/Language.h"
+#include "thor/lang/String.h"
 
 using namespace thor;
 
@@ -39,6 +40,34 @@ void draw_background(SDL_Renderer *renderer, int w, int h)
 namespace imgutil
 {
 
+class Image : thor::lang::Object
+{
+public:
+    Image();
+    ~Image();
+
+    bool load(thor::lang::String* filename);
+
+    SDL_Surface *img;
+};
+
+Image::Image() : img(nullptr)
+{
+}
+
+Image::~Image()
+{
+}
+
+bool Image::load(thor::lang::String* filename)
+{
+    char cfilename[64];
+    wcstombs(cfilename, filename->data->c_str(), sizeof(cfilename));
+    img = IMG_Load(cfilename);
+
+    return img != nullptr;
+}
+
 class Window : thor::lang::Object
 {
 public:
@@ -48,6 +77,8 @@ public:
     bool isQuit();
 
     void handleEvent();
+
+    void showImage(Image* img);
 
 private:
     SDL_Window   *_window;
@@ -103,6 +134,10 @@ void Window::handleEvent()
                 break;
         }
     }
+}
+
+void Window::showImage(Image* img)
+{
 }
 
 bool initialize()

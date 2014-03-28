@@ -20,8 +20,11 @@ task test()
         exit(0);
     }
 
-    var img_path = options.get(0);
+    var img      : Image  = new Image();
+    var img_path : String = options.get(0);
+
     println(img_path);
+    img.load(img_path);
 
     var handle_event = lambda() : void{
         if(window.isQuit())

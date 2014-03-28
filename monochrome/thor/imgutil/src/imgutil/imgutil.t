@@ -1,6 +1,18 @@
 import thor.unmanaged;
 
 @native
+class Image
+{
+    public function new();
+    public function delete();
+
+    public function load(filename : String) : bool;
+
+    public var _ptr_to_img : thor.unmanaged.ptr_<int8>;
+}
+
+
+@native
 class Window
 {
     public function new(x : int32, y : int32);
@@ -9,6 +21,8 @@ class Window
     public function isQuit() : bool;
 
     public function handleEvent() : void;
+
+    public function showImage(img : Image) : void;
 
     private var _ptr_to_window : thor.unmanaged.ptr_<int8>;
     private var _ptr_to_render : thor.unmanaged.ptr_<int8>;

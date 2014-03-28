@@ -2,6 +2,7 @@
     <dependency>
         <native_object name="imgutil.o" lpath="native" />
         <native_shared_library name="SDL2" lpath="/usr/local/lib" />
+        <native_shared_library name="SDL2_image" lpath="/usr/local/lib" />
     </dependency>
     <platform arch=""/>
 </project>
