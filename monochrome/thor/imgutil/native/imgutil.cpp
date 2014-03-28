@@ -97,11 +97,6 @@ Window::Window(int32 x, int32 y) :
     SDL_CreateWindowAndRenderer(0, 0, 0, &_window, &_render);
     SDL_SetWindowPosition(_window, 0, 0);
     SDL_SetWindowTitle(_window, "Thorlang Monochrome");
-    SDL_SetWindowSize(_window, 800, 600);
-    SDL_ShowWindow(_window);
-
-    draw_background(_render, 800, 600);
-    SDL_RenderPresent(_render);
 }
 
 Window::~Window()
@@ -140,9 +135,19 @@ void Window::handleEvent()
 
 void Window::showImage(Image* img)
 {
+    int w, h;
+
     _texture = SDL_CreateTextureFromSurface(_render, img->surface);
+
+    SDL_QueryTexture(_texture, nullptr, nullptr, &w, &h);
+    SDL_SetWindowSize(_window, w, h);
+
+    draw_background(_render, w, h);
+
     SDL_RenderCopy(_render, _texture, nullptr, nullptr);
     SDL_RenderPresent(_render);
+
+    SDL_ShowWindow(_window);
 }
 
 bool initialize()
