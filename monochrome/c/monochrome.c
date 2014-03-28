@@ -106,6 +106,11 @@ int main(int argc, char *argv[])
     SDL_SetWindowSize(window, w, h);
     SDL_ShowWindow(window);
 
+    draw_background(renderer, w, h);
+
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
+
     done = 0;
     while(!done)
     {
@@ -128,10 +133,6 @@ int main(int argc, char *argv[])
                     break;
             }
         }
-        draw_background(renderer, w, h);
-
-        SDL_RenderCopy(renderer, texture, NULL, NULL);
-        SDL_RenderPresent(renderer);
 
         SDL_Delay(100);
     }
