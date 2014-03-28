@@ -8,7 +8,7 @@ class Image
 
     public function load(filename : String) : bool;
 
-    public var _ptr_to_img : thor.unmanaged.ptr_<int8>;
+    public var _ptr_to_surface : thor.unmanaged.ptr_<int8>;
 }
 
 

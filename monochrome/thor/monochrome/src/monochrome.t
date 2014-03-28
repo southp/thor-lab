@@ -24,7 +24,13 @@ task test()
     var img_path : String = options.get(0);
 
     println(img_path);
-    img.load(img_path);
+    if(!img.load(img_path))
+    {
+        println("Failed to load image: \{img_path}");
+        exit(-2);
+    }
+
+    window.showImage(img);
 
     var handle_event = lambda() : void{
         if(window.isQuit())

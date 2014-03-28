@@ -48,10 +48,10 @@ public:
 
     bool load(thor::lang::String* filename);
 
-    SDL_Surface *img;
+    SDL_Surface *surface;
 };
 
-Image::Image() : img(nullptr)
+Image::Image() : surface(nullptr)
 {
 }
 
@@ -63,9 +63,9 @@ bool Image::load(thor::lang::String* filename)
 {
     char cfilename[64];
     wcstombs(cfilename, filename->data->c_str(), sizeof(cfilename));
-    img = IMG_Load(cfilename);
+    surface = IMG_Load(cfilename);
 
-    return img != nullptr;
+    return surface != nullptr;
 }
 
 class Window : thor::lang::Object
@@ -83,6 +83,7 @@ public:
 private:
     SDL_Window   *_window;
     SDL_Renderer *_render;
+    SDL_Texture  *_texture;
 
     bool _quit;
 };
@@ -90,6 +91,7 @@ private:
 Window::Window(int32 x, int32 y) :
     _window(nullptr),
     _render(nullptr),
+    _texture(nullptr),
     _quit(false)
 {
     SDL_CreateWindowAndRenderer(0, 0, 0, &_window, &_render);
@@ -138,6 +140,9 @@ void Window::handleEvent()
 
 void Window::showImage(Image* img)
 {
+    _texture = SDL_CreateTextureFromSurface(_render, img->surface);
+    SDL_RenderCopy(_render, _texture, nullptr, nullptr);
+    SDL_RenderPresent(_render);
 }
 
 bool initialize()
