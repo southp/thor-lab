@@ -1,20 +1,12 @@
 
+@native
 class Window
 {
-    public function new(x : int32, y : int32)
-    {
-    }
+    public function new(x : int32, y : int32);
+    public function delete();
 
-    public function isQuit() : bool
-    {
-        static var x : int32 = 0;
-        ++x;
+    public function isQuit() : bool;
 
-        return x > 1000;
-    }
-
-    public function handleEvent() : void
-    {
-    }
+    public function handleEvent() : void;
 }
 
