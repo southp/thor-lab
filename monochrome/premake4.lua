@@ -1,7 +1,7 @@
 solution "monochrome"
     configurations {"debug", "release"}
     targetdir "bin"
-    location  "build"
+    location  "../mono_build"
 
     configuration "debug"
         defines {
