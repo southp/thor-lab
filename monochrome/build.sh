@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if ! test -e ../mono_build
 then
     premake4 gmake
