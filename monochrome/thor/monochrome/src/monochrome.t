@@ -17,10 +17,14 @@ task test()
     var img_path = options.get(0);
     println(img_path);
 
-    var handle_event = lambda(){
+    var handle_event = lambda() : void{
         if(window.isQuit())
             exit(0);
         else
-            async->window.handleEvent();
-    }
+            window.handleEvent();
+
+        async->handle_event();
+    };
+
+    async->handle_event();
 }
