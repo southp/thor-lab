@@ -1,33 +1,11 @@
-solution "monochrome"
-    configurations {"debug", "release"}
-    language  "C"
-    targetdir "bin"
-    location  "build"
+project "c_monochrome"
+    kind "ConsoleApp"
 
-    configuration "debug"
-        defines {
-            "DEBUG"
-        }
-        flags {
-            "Symbols"
-        }
+    links {
+        "SDL2",
+        "SDL2_image"
+    }
 
-    configuration "release"
-        defines {
-            "NDEBUG"
-        }
-        flags {
-            "Optimize"
-        }
-
-    project "c_monochrome"
-        kind "ConsoleApp"
-
-        links {
-            "SDL2",
-            "SDL2_image"
-        }
-
-        files {
-            "monochrome.c"
-        }
+    files {
+        "monochrome.c"
+    }
