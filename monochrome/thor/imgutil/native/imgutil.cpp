@@ -152,8 +152,7 @@ void Window::showImage(Image* img)
 
 bool initialize()
 {
-    // int result = SDL_Init(SDL_INIT_VIDEO);
-    int result = 0;
+    int result = SDL_Init(SDL_INIT_VIDEO);
 
     return result == 0;
 }
