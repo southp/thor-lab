@@ -7,8 +7,8 @@ then
     premake4 gmake
 fi
 
-if test "$1" = "thor"
-then
+case $1 in
+thor)
     cd thor
 
     cd imgutil
@@ -32,10 +32,16 @@ then
     echo "Build monochome..."
     thorc b d
 
-elif test "$1" = "c_st"
-then
+    ;;
+
+c_st)
     cd ../mono_build
     make c_st
-else
+
+    ;;
+
+*)
     echo "What do you want?"
-fi
+    ;;
+esac
+

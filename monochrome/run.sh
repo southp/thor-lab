@@ -2,14 +2,18 @@
 
 awesome=$PWD/awesome.png
 
-if test "$1" = "thor"
-then
+case $1 in
+thor)
     cd thor/monochrome
     thorc r test --domain=mt --args $awesome
+    ;;
 
-elif test "$1" = "c_st"
-then
+c_st)
     ./bin/c_st $awesome
-else
+    ;;
+
+*)
     echo "What do you want?"
-fi
+    ;;
+esac
+
