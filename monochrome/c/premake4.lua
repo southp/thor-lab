@@ -8,5 +8,6 @@ project "c_st"
     }
 
     files {
-        "monochrome.c"
+        "monochrome.c",
+        "mono_st.c"
     }
