@@ -12,6 +12,10 @@ c_st)
     ./bin/c_st $awesome
     ;;
 
+c_mt)
+    ./bin/c_mt $awesome
+    ;;
+
 *)
     echo "What do you want?"
     ;;

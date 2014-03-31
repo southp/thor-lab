@@ -40,6 +40,12 @@ c_st)
 
     ;;
 
+c_mt)
+    cd ../mono_build
+    make c_mt
+
+    ;;
+
 *)
     echo "What do you want?"
     ;;
