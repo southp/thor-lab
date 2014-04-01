@@ -2,7 +2,7 @@
 
 set -e
 
-if ! test -e ../mono_build
+if ! test -e ../mono_build/Makefile
 then
     premake4 gmake
 fi
@@ -37,6 +37,12 @@ thor)
 c_st)
     cd ../mono_build
     make c_st
+
+    ;;
+
+c_mt)
+    cd ../mono_build
+    make c_mt
 
     ;;
 
