@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -54,8 +55,9 @@ static void monochrome(SDL_Surface *sur)
 
 int main(int argc, char *argv[])
 {
-    Uint32 flags;
+    Uint32 flags = 0;
     int i, w, h, done;
+    clock_t clk;
 
     SDL_Window   *window = NULL;
     SDL_Renderer *renderer = NULL;
@@ -79,6 +81,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "SDL_CreateWindowAndRenderer() failed: %s\n", SDL_GetError());
         return -2;
     }
+    SDL_SetWindowPosition(window, 0, 0);
 
     img_surface = IMG_Load(img_name);
     if(!img_surface)
@@ -87,7 +90,9 @@ int main(int argc, char *argv[])
         return -3;
     }
 
+    clk = clock();
     monochrome(img_surface);
+    printf("*** Time: %f\n", (float)(clock() - clk) / CLOCKS_PER_SEC);
 
     texture = SDL_CreateTextureFromSurface(renderer, img_surface);
     if (!texture)
@@ -100,6 +105,11 @@ int main(int argc, char *argv[])
     SDL_SetWindowTitle(window, img_name);
     SDL_SetWindowSize(window, w, h);
     SDL_ShowWindow(window);
+
+    draw_background(renderer, w, h);
+
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
 
     done = 0;
     while(!done)
@@ -123,10 +133,6 @@ int main(int argc, char *argv[])
                     break;
             }
         }
-        draw_background(renderer, w, h);
-
-        SDL_RenderCopy(renderer, texture, NULL, NULL);
-        SDL_RenderPresent(renderer);
 
         SDL_Delay(100);
     }
