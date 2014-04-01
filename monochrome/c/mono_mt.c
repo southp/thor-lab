@@ -32,27 +32,46 @@ void* mono_work(void *arg)
     return NULL;
 }
 
+#define NUM_CORE 4
+
 void monochrome(SDL_Surface *sur)
 {
-    SDL_Color *pxs = sur->pixels;
     int w = sur->w;
     int h = sur->h;
     int total = w*h;
-    int half = total / 2;
+    int   div = total / NUM_CORE;
 
-    pthread_t threads[2];
-    struct region arg[2];
+    SDL_Color *pxs = sur->pixels;
+    SDL_Color *pxs_end = pxs + total;
 
-    arg[0].beg = pxs;
-    arg[0].end = pxs + half;
+    pthread_t threads[NUM_CORE];
+    struct region arg[NUM_CORE];
 
-    arg[1].beg = pxs + half;
-    arg[1].end = pxs + total;
+    int i;
 
-    pthread_create(threads, NULL, mono_work, arg);
-    pthread_create(threads + 1, NULL, mono_work, arg + 1);
+    for(i = 0; i < NUM_CORE; ++i)
+    {
+        struct region* a = arg + i;
 
-    pthread_join(threads[0], NULL);
-    pthread_join(threads[1], NULL);
+        a->beg = pxs;
+
+        if(i != NUM_CORE - 1)
+        {
+            pxs += div;
+            a->end = pxs;
+        }
+        else
+        {
+            a->end = pxs_end;
+        }
+    }
+
+    for(i = 0; i < NUM_CORE; ++i)
+    {
+        pthread_create(threads + i, NULL, mono_work, arg + i);
+    }
+
+    for(i = 0; i < NUM_CORE; ++i)
+        pthread_join(threads[i], NULL);
 }
 
