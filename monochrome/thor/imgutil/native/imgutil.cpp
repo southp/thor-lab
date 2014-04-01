@@ -1,4 +1,5 @@
 #include <iostream>
+// #include <cstring>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -6,6 +7,7 @@
 #include "thor/PrimitiveTypes.h"
 #include "thor/lang/Language.h"
 #include "thor/lang/String.h"
+#include "thor/container/Vector.h"
 
 using namespace thor;
 
@@ -43,10 +45,15 @@ namespace imgutil
 class Image : thor::lang::Object
 {
 public:
+    using PixCont = thor::container::Vector<int32>;
+
     Image();
     ~Image();
 
     bool load(thor::lang::String* filename);
+
+    PixCont* getAllPixels();
+       void  setAllPixels(PixCont* pixs);
 
     SDL_Surface *surface;
 };
@@ -66,6 +73,30 @@ bool Image::load(thor::lang::String* filename)
     surface = IMG_Load(cfilename);
 
     return surface != nullptr;
+}
+
+auto Image::getAllPixels() -> PixCont*
+{
+    int          w = surface->w;
+    int          h = surface->h;
+    int      total = w*h;
+    int*  ori_pixs = reinterpret_cast<int*>(surface->pixels);
+
+    PixCont* pixs = PixCont::create(total);
+
+    for(int i = 0; i < total; ++i)
+    {
+        int val = *ori_pixs;
+        /* memcpy(&val, ori_pixs, sizeof(val)); */
+        pixs->set(i, val);
+        ++ori_pixs;
+    }
+
+    return pixs;
+}
+
+void Image::setAllPixels(PixCont* pixs)
+{
 }
 
 class Window : thor::lang::Object

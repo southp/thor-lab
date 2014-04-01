@@ -1,6 +1,17 @@
 import .= imgutil;
 import .= thor.container;
 
+
+function monochrome(img : Image)
+{
+    var pixs : Vector<int32> = img.getAllPixels();
+
+    for(var p in pixs)
+    {
+        println(p);
+    }
+}
+
 @entry
 task test()
 {
@@ -29,6 +40,8 @@ task test()
         println("Failed to load image: \{img_path}");
         exit(-2);
     }
+
+    monochrome(img);
 
     window.showImage(img);
 
