@@ -6,10 +6,17 @@ function monochrome(img : Image)
 {
     var pixs : Vector<int32> = img.getAllPixels();
 
-    for(var p in pixs)
+    for(var i = 0; i < pixs.size(); ++i)
     {
-        println(p);
+        var p : int32 = pixs.get(i);
+        var a : float32 = (p & 0xFF) / 255.0;
+        var b : float32 = ((p >> 8) & 0xFF) / 255.0;
+        var g : float32 = ((p >> 16) & 0xFF) / 255.0;
+        var r : float32 = ((p >> 24) & 0xFF) / 255.0;
+
     }
+
+    img.setAllPixels(pixs);
 }
 
 @entry
