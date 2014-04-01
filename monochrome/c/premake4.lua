@@ -18,7 +18,8 @@ project "c_mt"
 
     links {
         "SDL2",
-        "SDL2_image"
+        "SDL2_image",
+        "pthread"
     }
 
     files {
