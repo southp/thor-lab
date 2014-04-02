@@ -78,10 +78,10 @@ bool Image::load(thor::lang::String* filename)
 
 auto Image::getAllPixels() -> PixCont*
 {
-    int          w = surface->w;
-    int          h = surface->h;
-    int      total = w*h;
-    int*  ori_pixs = reinterpret_cast<int*>(surface->pixels);
+    int         w = surface->w;
+    int         h = surface->h;
+    int     total = w*h;
+    int* ori_pixs = reinterpret_cast<int*>(surface->pixels);
 
     // FIXME: instead of total, create() always get a UINT_MAX...WTF?
     // PixCont* pixs = PixCont::create(static_cast<int64>(total));
