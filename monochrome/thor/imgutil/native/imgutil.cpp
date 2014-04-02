@@ -64,6 +64,7 @@ Image::Image() : surface(nullptr)
 
 Image::~Image()
 {
+    SDL_FreeSurface(surface);
 }
 
 bool Image::load(thor::lang::String* filename)
@@ -148,6 +149,8 @@ Window::Window(int32 x, int32 y) :
 
 Window::~Window()
 {
+    SDL_DestroyRenderer(_render);
+    SDL_DestroyWindow(_window);
 }
 
 bool Window::isQuit()
