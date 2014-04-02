@@ -1,4 +1,5 @@
 import thor.unmanaged;
+import thor.container;
 
 @native
 class Image
@@ -7,6 +8,9 @@ class Image
     public function delete();
 
     public function load(filename : String) : bool;
+
+    public function getAllPixels() : thor.container.Vector<int32>;
+    public function setAllPixels(pixs : thor.container.Vector<int32>);
 
     public var _ptr_to_surface : thor.unmanaged.ptr_<int8>;
 }
