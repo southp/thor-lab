@@ -150,6 +150,9 @@ Window::Window(int32 x, int32 y) :
 
 Window::~Window()
 {
+    if(_texture != nullptr)
+        SDL_DestroyTexture(_texture);
+
     SDL_DestroyRenderer(_render);
     SDL_DestroyWindow(_window);
 }
