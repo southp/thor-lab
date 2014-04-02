@@ -42,7 +42,7 @@ void draw_background(SDL_Renderer *renderer, int w, int h)
 namespace imgutil
 {
 
-class Image : thor::lang::Object
+class Image : public thor::lang::Object
 {
 public:
     using PixCont = thor::container::Vector<int32>;
@@ -115,7 +115,7 @@ void Image::setAllPixels(PixCont* pixs)
     }
 }
 
-class Window : thor::lang::Object
+class Window : public thor::lang::Object
 {
 public:
     Window(int32 x, int32 y);
