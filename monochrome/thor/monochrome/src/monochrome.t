@@ -9,15 +9,14 @@ function monochrome(img : Image)
     for(var i = 0; i < pixs.size(); ++i)
     {
         var p : int32 = pixs.get(i);
-        var a : int32 = p & 0xFF;
-        var b : float32 = ((p >> 8) & 0xFF) / 255.0;
-        var g : float32 = ((p >> 16) & 0xFF) / 255.0;
-        var r : float32 = ((p >> 24) & 0xFF) / 255.0;
+        var r : float32 = (p & 0xFF) / 255.0;
+        var g : float32 = ((p >> 8) & 0xFF) / 255.0;
+        var b : float32 = ((p >> 16) & 0xFF) / 255.0;
+        var a : int32 = p & 0xFF000000;
 
         var mono : float32 = (0.2125 * r) + (0.7154 * g) + (0.0721 * b);
         var mono_int : int32 = cast<int32>(mono * 255);
-
-        var final : int32 = a | (mono_int << 8) | (mono_int << 16) | (mono_int << 24);
+        var final : int32 = a | mono_int | (mono_int << 8) | (mono_int << 16);
 
         pixs.set(i, final);
     }
