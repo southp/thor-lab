@@ -144,6 +144,8 @@ Window::Window(int32 x, int32 y) :
     SDL_CreateWindowAndRenderer(0, 0, 0, &_window, &_render);
     SDL_SetWindowPosition(_window, 0, 0);
     SDL_SetWindowTitle(_window, "Thorlang Monochrome");
+
+    std::assert(_window != nullptr && _render != nullptr && "Failed to create SDL_Window / SDL_Renderer.");
 }
 
 Window::~Window()
