@@ -82,13 +82,17 @@ auto Image::getAllPixels() -> PixCont*
     int      total = w*h;
     int*  ori_pixs = reinterpret_cast<int*>(surface->pixels);
 
-    PixCont* pixs = PixCont::create(total);
+    // FIXME: instead of total, create() always get a UINT_MAX...WTF?
+    // PixCont* pixs = PixCont::create(static_cast<int64>(total));
+
+    PixCont* pixs = PixCont::create();
 
     for(int i = 0; i < total; ++i)
     {
         int val = *ori_pixs;
-        /* memcpy(&val, ori_pixs, sizeof(val)); */
-        pixs->set(i, val);
+        // pixs->set(i, val);
+
+        pixs->pushBack(val);
         ++ori_pixs;
     }
 
@@ -97,6 +101,18 @@ auto Image::getAllPixels() -> PixCont*
 
 void Image::setAllPixels(PixCont* pixs)
 {
+    int         w = surface->w;
+    int         h = surface->h;
+    int     total = w*h;
+    int* ori_pixs = reinterpret_cast<int*>(surface->pixels);
+
+    for(int i = 0; i < total; ++i)
+    {
+        int val = pixs->get(i);
+
+        *ori_pixs = val;
+        ++ori_pixs;
+    }
 }
 
 class Window : thor::lang::Object
