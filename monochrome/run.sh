@@ -3,7 +3,7 @@
 impl=$1
 target=$2
 
-if test $2 =
+if test -z $2
 then
     target=$PWD/awesome.png
 else
