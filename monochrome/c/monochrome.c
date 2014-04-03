@@ -9,7 +9,7 @@
 
 void monochrome(SDL_Surface *sur);
 
-/* Draw a Gimpish background pattern to show transparency in the image */
+// function courtesy of showimage.c from SDL2_image lib.
 static void draw_background(SDL_Renderer *renderer, int w, int h)
 {
     SDL_Color col[2] = {
@@ -23,7 +23,6 @@ static void draw_background(SDL_Renderer *renderer, int w, int h)
     rect.h = 8;
     for (y = 0; y < h; y += rect.h) {
         for (x = 0; x < w; x += rect.w) {
-            /* use an 8x8 checkerboard pattern */
             i = (((x ^ y) >> 3) & 1);
             SDL_SetRenderDrawColor(renderer, col[i].r, col[i].g, col[i].b, col[i].a);
 
@@ -46,7 +45,6 @@ int main(int argc, char *argv[])
     SDL_Surface  *img_surface = NULL;
     SDL_Event     event;
 
-    const char *saveFile = NULL;
     const char *img_name = NULL;
 
     if(argc != 2)
