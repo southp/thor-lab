@@ -54,18 +54,18 @@ static void draw_background(SDL_Renderer *renderer, int w, int h)
 int main(int argc, char *argv[])
 {
     Uint32 flags = 0;
-    int i, w, h, size, done;
+    int w, h, size, done;
     clock_t clk;
 
     SDL_Window   *window = NULL;
     SDL_Renderer *renderer = NULL;
-    SDL_Texture  *texture = NULL;
+    SDL_Texture  *img_texture = NULL;
     SDL_Surface  *img_surface = NULL;
     SDL_Event     event;
 
     const char *img_name = NULL;
 
-    uint32_t *dev_buf = NULL, *host_buf = NULL;
+    uint32_t *dev_buf = NULL;
     dim3 thrd_per_block(32,32), block_per_grid;
 
     if(argc != 2)
@@ -89,18 +89,19 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Failed to load %s.\n", img_name);
         return -3;
     }
+    w = img_surface->w;
+    h = img_surface->h;
 
     clk = clock();
 
-    size = img_surface->w * img_surface->h * sizeof(uint32_t);
+    size = w * h * sizeof(uint32_t);
     cudaMalloc((void**)&dev_buf, size);
-    host_buf = (uint32_t*)malloc(size);
 
     cudaMemcpy(dev_buf, img_surface->pixels, size, cudaMemcpyHostToDevice);
 
-    block_per_grid.x = img_surface->w / thrd_per_block.x;
-    block_per_grid.y = img_surface->h / thrd_per_block.y;
-    monochrome<<<block_per_grid, thrd_per_block, 0>>>(dev_buf, img_surface->w, img_surface->h);
+    block_per_grid.x = w / thrd_per_block.x;
+    block_per_grid.y = h / thrd_per_block.y;
+    monochrome<<<block_per_grid, thrd_per_block, 0>>>(dev_buf, w, h);
     cudaDeviceSynchronize();
 
     cudaMemcpy(img_surface->pixels, dev_buf, size, cudaMemcpyDeviceToHost);
@@ -109,13 +110,12 @@ int main(int argc, char *argv[])
 
     printf("*** Time: %f\n", (float)(clock() - clk) / CLOCKS_PER_SEC);
 
-    texture = SDL_CreateTextureFromSurface(renderer, img_surface);
-    if (!texture)
+    img_texture = SDL_CreateTextureFromSurface(renderer, img_surface);
+    if (!img_texture)
     {
         fprintf(stderr, "Couldn't create texture from surface!\n");
         return -1;
     }
-    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
 
     SDL_SetWindowTitle(window, img_name);
     SDL_SetWindowSize(window, w, h);
@@ -144,14 +144,14 @@ int main(int argc, char *argv[])
             }
         }
         draw_background(renderer, w, h);
-        SDL_RenderCopy(renderer, texture, NULL, NULL);
+        SDL_RenderCopy(renderer, img_texture, NULL, NULL);
         SDL_RenderPresent(renderer);
 
         SDL_Delay(100);
     }
 
     SDL_FreeSurface(img_surface);
-    SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(img_texture);
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
