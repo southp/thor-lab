@@ -21,3 +21,5 @@ solution "monochrome"
 
     include "c"
 
+    include "opencv"
+

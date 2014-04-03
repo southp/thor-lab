@@ -46,6 +46,10 @@ c_mt)
 
     ;;
 
+opencv)
+    cd ../mono_build
+    make opencv
+
 *)
     echo "What do you want?"
     ;;

@@ -16,6 +16,10 @@ c_mt)
     ./bin/c_mt $awesome
     ;;
 
+opencv)
+    ./bin/opencv $awesome
+    ;;
+
 *)
     echo "What do you want?"
     ;;
