@@ -1,8 +1,11 @@
 // code courtesy of opencv tutorial:
 // http://docs.opencv.org/doc/tutorials/introduction/load_save_image/load_save_image.html#load-save-image
+//
 
-#include <cv.h>
-#include <highgui.h>
+#include <stdio.h>
+
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 using namespace cv;
 
