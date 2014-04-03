@@ -20,6 +20,10 @@ opencv)
     ./bin/opencv $awesome
     ;;
 
+cuda)
+    ./bin/cuda_mono $awesome
+    ;;
+
 *)
     echo "What do you want?"
     ;;

@@ -52,6 +52,12 @@ opencv)
 
     ;;
 
+cuda)
+    cd cuda
+    nvcc cuda_monochrome.cu -o ../bin/cuda_mono -lSDL2 -lSDL2_image
+
+    ;;
+
 *)
     echo "What do you want?"
     ;;
