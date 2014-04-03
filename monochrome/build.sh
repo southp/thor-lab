@@ -36,19 +36,19 @@ thor)
 
 c_st)
     cd ../mono_build
-    make c_st
+    make c_st_mono
 
     ;;
 
 c_mt)
     cd ../mono_build
-    make c_mt
+    make c_mt_mono
 
     ;;
 
 opencv)
     cd ../mono_build
-    make opencv
+    make opencv_mono
 
     ;;
 

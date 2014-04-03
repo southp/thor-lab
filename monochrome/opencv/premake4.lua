@@ -1,4 +1,4 @@
-project "opencv"
+project "opencv_mono"
     language "C++"
     kind "ConsoleApp"
 

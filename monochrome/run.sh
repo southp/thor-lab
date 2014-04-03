@@ -1,27 +1,35 @@
 #!/bin/bash
 
-awesome=$PWD/awesome.png
+impl=$1
+target=$2
 
-case $1 in
+if test $2 =
+then
+    target=$PWD/awesome.png
+else
+    target=$2
+fi
+
+case $impl in
 thor)
     cd thor/monochrome
-    thorc r test --domain=mt --args $awesome
+    thorc r test --domain=mt --args $target
     ;;
 
 c_st)
-    ./bin/c_st $awesome
+    ./bin/c_st_mono $target
     ;;
 
 c_mt)
-    ./bin/c_mt $awesome
+    ./bin/c_mt_mono $target
     ;;
 
 opencv)
-    ./bin/opencv $awesome
+    ./bin/opencv_mono $target
     ;;
 
 cuda)
-    ./bin/cuda_mono $awesome
+    ./bin/cuda_mono $target
     ;;
 
 *)

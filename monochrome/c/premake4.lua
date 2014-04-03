@@ -1,4 +1,4 @@
-project "c_st"
+project "c_st_mono"
     language "C"
     kind "ConsoleApp"
 
@@ -12,7 +12,7 @@ project "c_st"
         "mono_st.c"
     }
 
-project "c_mt"
+project "c_mt_mono"
     language "C"
     kind "ConsoleApp"
 
