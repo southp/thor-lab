@@ -1,26 +1,27 @@
 #!/bin/bash
 
 impl=$1
-target=$2
+
+shift
+
+while getopts g opt
+do
+    case $opt in
+    g)
+        debug=1
+        ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+target=$1
 
 if test -z $target
 then
     target=$PWD/awesome.png
 else
-    target=$PWD/$2
+    target=$PWD/$target
 fi
-
-shift 2
-options=$@
-
-for opt in $@
-do
-    case $opt in
-    -g)
-        debug=1
-        ;;
-    esac
-done
 
 thor_exec_cmd(){
     entry_name=$1
