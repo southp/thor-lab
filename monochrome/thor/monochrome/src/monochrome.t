@@ -101,8 +101,6 @@ task mono_pixel(pixs : Vector<int32>, i : int32)
 
     var job = lambda() : void
     {
-        println("mono_pixel: \{i}");
-
         var p : int32 = pixs.get(i);
         var mono_p = mono_value(p);
 
