@@ -11,9 +11,14 @@ else
 fi
 
 case $impl in
-thor)
+thor_func)
     cd thor/monochrome
-    thorc r test --domain=mt --args $target
+    thorc r mono_function --domain=mt --args $target
+    ;;
+
+thor_per_pixel)
+    cd thor/monochrome
+    thorc r mono_async_per_pixel --domain=mt --args $target
     ;;
 
 c_st)

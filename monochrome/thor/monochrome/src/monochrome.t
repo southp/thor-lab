@@ -31,6 +31,8 @@ task mono_pixel(pixs : Vector<int32>, i : int32)
 
     var job = lambda() : void
     {
+        println("mono_pixel: \{i}");
+
         var p : int32 = pixs.get(i);
         var r : float32 = (p & 0xFF) / 255.0;
         var g : float32 = ((p >> 8) & 0xFF) / 255.0;
@@ -66,8 +68,10 @@ task async_monochrome(img : Image)
     img.setAllPixels(pixs);
 }
 
-@entry
-task test()
+var g_window : Window = null;
+var g_img    : Image  = null;
+
+function init_and_load_image()
 {
     if(!initialize())
     {
@@ -75,7 +79,8 @@ task test()
         exit(-1);
     }
 
-    var window = new Window(0, 0);
+    g_window = new Window(0, 0);
+    g_img = new Image;
     var flag = new Flag;
     var options = flag.getRaw();
 
@@ -85,35 +90,61 @@ task test()
         exit(0);
     }
 
-    var img      : Image  = new Image();
     var img_path : String = options.get(0);
 
     println(img_path);
-    if(!img.load(img_path))
+    if(!g_img.load(img_path))
     {
         println("Failed to load image: \{img_path}");
         exit(-2);
     }
+}
 
-    /*monochrome(img);*/
-    flow ->
-    {
-        async_monochrome(img);
-    }
-
-    window.showImage(img);
-
+task event_loop()
+{
     var handle_event = lambda() : void{
-        if(window.isQuit())
+        if(g_window.isQuit())
         {
             finalize();
             exit(0);
         }
         else
-            window.handleEvent();
+            g_window.handleEvent();
 
         async->handle_event();
     };
 
     async->handle_event();
 }
+
+function show_result()
+{
+    g_window.showImage(g_img);
+
+    async->event_loop();
+}
+
+
+@entry
+task mono_function()
+{
+    init_and_load_image();
+
+    monochrome(g_img);
+
+    show_result();
+}
+
+@entry
+task mono_async_per_pixel()
+{
+    init_and_load_image();
+
+    flow ->
+    {
+        async_monochrome(g_img);
+    }
+
+    show_result();
+}
+
