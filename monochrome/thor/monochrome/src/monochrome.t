@@ -62,6 +62,21 @@ function show_result()
 
 /////////////////////// Monochrome implementation //////////////////////////////
 
+function mono_value(p : int32)
+{
+    var r : float32 = (p & 0xFF) / 255.0;
+    var g : float32 = ((p >> 8) & 0xFF) / 255.0;
+    var b : float32 = ((p >> 16) & 0xFF) / 255.0;
+    var a : int32 = p & 0xFF000000;
+
+    var mono : float32 = (0.2125 * r) + (0.7154 * g) + (0.0721 * b);
+    var mono_int : int32 = cast<int32>(mono * 255);
+
+    var final : int32 = a | mono_int | (mono_int << 8) | (mono_int << 16);
+
+    return final;
+}
+
 /////// Single function
 function monochrome(img : Image)
 {
@@ -70,16 +85,9 @@ function monochrome(img : Image)
     for(var i = 0; i < pixs.size(); ++i)
     {
         var p : int32 = pixs.get(i);
-        var r : float32 = (p & 0xFF) / 255.0;
-        var g : float32 = ((p >> 8) & 0xFF) / 255.0;
-        var b : float32 = ((p >> 16) & 0xFF) / 255.0;
-        var a : int32 = p & 0xFF000000;
+        var mono_p : int32 = mono_value(p);
 
-        var mono : float32 = (0.2125 * r) + (0.7154 * g) + (0.0721 * b);
-        var mono_int : int32 = cast<int32>(mono * 255);
-        var final : int32 = a | mono_int | (mono_int << 8) | (mono_int << 16);
-
-        pixs.set(i, final);
+        pixs.set(i, mono_p);
     }
 
     img.setAllPixels(pixs);
@@ -96,16 +104,9 @@ task mono_pixel(pixs : Vector<int32>, i : int32)
         println("mono_pixel: \{i}");
 
         var p : int32 = pixs.get(i);
-        var r : float32 = (p & 0xFF) / 255.0;
-        var g : float32 = ((p >> 8) & 0xFF) / 255.0;
-        var b : float32 = ((p >> 16) & 0xFF) / 255.0;
-        var a : int32 = p & 0xFF000000;
+        var mono_p = mono_value(p);
 
-        var mono : float32 = (0.2125 * r) + (0.7154 * g) + (0.0721 * b);
-        var mono_int : int32 = cast<int32>(mono * 255);
-        var final : int32 = a | mono_int | (mono_int << 8) | (mono_int << 16);
-
-        pixs.set(i, final);
+        pixs.set(i, mono_p);
     };
 
     flow->
@@ -131,8 +132,28 @@ task async_monochrome(img : Image)
 }
 
 /////// Async per given segment
-task async_block_monochrome(img : Image)
+task mono_segment(pixs : Vector<int32>, beg : int32, end : int32)
 {
+    for(var i = beg; i != end; ++i)
+    {
+        var p = pixs.get(i);
+        var mono_p = mono_value(p);
+
+        pixs.set(i, mono_p);
+    }
+}
+
+task async_segment_monochrome(img : Image)
+{
+    var pixs : Vector<int32> = img.getAllPixels();
+    var total = pixs.size();
+
+    flow ->
+    {
+        mono_segment(pixs,         0, total / 4);
+        mono_segment(pixs, total / 4, total / 2);
+        mono_segment(pixs, total / 2, total    );
+    }
 }
 
 @entry
@@ -165,7 +186,7 @@ task mono_async_per_segment()
 
     flow ->
     {
-        async_block_monochrome(g_img);
+        async_segment_monochrome(g_img);
     }
 
     show_result();

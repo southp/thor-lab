@@ -21,6 +21,11 @@ thor_per_pixel)
     thorc r mono_async_per_pixel --domain=mt --args $target
     ;;
 
+thor_per_segment)
+    cd thor/monochrome
+    thorc r mono_async_per_segment --domain=mt --args $target
+    ;;
+
 c_st)
     ./bin/c_st_mono $target
     ;;
