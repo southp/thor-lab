@@ -3,27 +3,51 @@
 impl=$1
 target=$2
 
-if test -z $2
+if test -z $target
 then
     target=$PWD/awesome.png
 else
     target=$PWD/$2
 fi
 
+shift 2
+options=$@
+
+for opt in $@
+do
+    if test $opt=-g
+    then
+        debug=1
+    fi
+done
+
+thor_exec_cmd(){
+    entry_name=$1
+    is_debug=$2
+
+    if test -z $is_debug
+    then
+        thorc r $entry_name -g --domain=mt --args $target
+    else
+        thorc r $entry_name --domain=mt --args $target
+    fi
+}
+
+
 case $impl in
 thor_func)
     cd thor/monochrome
-    thorc r mono_function --domain=mt --args $target
+    thor_exec_cmd mono_function $debug
     ;;
 
 thor_per_pixel)
     cd thor/monochrome
-    thorc r mono_async_per_pixel --domain=mt --args $target
+    thor_exec_cmd mono_async_per_pixel $debug
     ;;
 
 thor_per_segment)
     cd thor/monochrome
-    thorc r mono_async_per_segment --domain=mt --args $target
+    thor_exec_cmd mono_async_per_segment $debug
     ;;
 
 c_st)
