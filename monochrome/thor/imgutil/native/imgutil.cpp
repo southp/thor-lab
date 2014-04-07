@@ -55,6 +55,9 @@ public:
     PixCont* getAllPixels();
        void  setAllPixels(PixCont* pixs);
 
+    int32 getWidth()  const;
+    int32 getHeight() const;
+
     SDL_Surface *surface;
 };
 
@@ -114,6 +117,16 @@ void Image::setAllPixels(PixCont* pixs)
         *ori_pixs = val;
         ++ori_pixs;
     }
+}
+
+int32 Image::getWidth() const
+{
+    return surface->w;
+}
+
+int32 Image::getHeight() const
+{
+    return surface->h;
 }
 
 class Window : public thor::lang::Object

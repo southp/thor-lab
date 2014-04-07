@@ -131,7 +131,9 @@ task async_monochrome(img : Image)
 }
 
 /////// Async per given segment
-task
+task async_block_monochrome(img : Image)
+{
+}
 
 @entry
 task mono_function()
@@ -163,6 +165,7 @@ task mono_async_per_segment()
 
     flow ->
     {
+        async_block_monochrome(g_img);
     }
 
     show_result();
