@@ -17,7 +17,6 @@ for opt in $@
 do
     case $opt in
     -g)
-        echo "AAAA" $opt
         debug=1
         ;;
     esac
