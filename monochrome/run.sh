@@ -14,14 +14,7 @@ do
 done
 shift $((OPTIND - 1))
 
-target=$1
-
-if test -z $target
-then
-    target=$PWD/awesome.png
-else
-    target=$PWD/$target
-fi
+target=$PWD/${1:-awesome.png}
 
 thor_exec_cmd(){
     entry_name=$1
