@@ -114,7 +114,7 @@ task mono_pixel(pixs : Vector<int32>, i : int32)
     }
 }
 
-task async_monochrome(img : Image)
+task async_pixel_monochrome(img : Image)
 {
     var pixs : Vector<int32> = img.getAllPixels();
 
@@ -172,7 +172,7 @@ task mono_async_per_pixel()
 
     flow ->
     {
-        async_monochrome(g_img);
+        async_pixel_monochrome(g_img);
     }
 
     show_result();
