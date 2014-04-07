@@ -1,72 +1,7 @@
 import .= imgutil;
 import .= thor.container;
 
-function monochrome(img : Image)
-{
-    var pixs : Vector<int32> = img.getAllPixels();
-
-    for(var i = 0; i < pixs.size(); ++i)
-    {
-        var p : int32 = pixs.get(i);
-        var r : float32 = (p & 0xFF) / 255.0;
-        var g : float32 = ((p >> 8) & 0xFF) / 255.0;
-        var b : float32 = ((p >> 16) & 0xFF) / 255.0;
-        var a : int32 = p & 0xFF000000;
-
-        var mono : float32 = (0.2125 * r) + (0.7154 * g) + (0.0721 * b);
-        var mono_int : int32 = cast<int32>(mono * 255);
-        var final : int32 = a | mono_int | (mono_int << 8) | (mono_int << 16);
-
-        pixs.set(i, final);
-    }
-
-    img.setAllPixels(pixs);
-}
-
-
-task mono_pixel(pixs : Vector<int32>, i : int32)
-{
-    if(i == pixs.size())
-        return;
-
-    var job = lambda() : void
-    {
-        println("mono_pixel: \{i}");
-
-        var p : int32 = pixs.get(i);
-        var r : float32 = (p & 0xFF) / 255.0;
-        var g : float32 = ((p >> 8) & 0xFF) / 255.0;
-        var b : float32 = ((p >> 16) & 0xFF) / 255.0;
-        var a : int32 = p & 0xFF000000;
-
-        var mono : float32 = (0.2125 * r) + (0.7154 * g) + (0.0721 * b);
-        var mono_int : int32 = cast<int32>(mono * 255);
-        var final : int32 = a | mono_int | (mono_int << 8) | (mono_int << 16);
-
-        pixs.set(i, final);
-    };
-
-    flow->
-    {
-        job();
-        mono_pixel(pixs, ++i);
-    }
-}
-
-task async_monochrome(img : Image)
-{
-    var pixs : Vector<int32> = img.getAllPixels();
-
-    var size = pixs.size();
-    println("total pixels: \{size}");
-
-    flow ->
-    {
-        mono_pixel(pixs, 0);
-    }
-
-    img.setAllPixels(pixs);
-}
+/////////////////////// Some house-keeping code ///////////////////////////
 
 var g_window : Window = null;
 var g_img    : Image  = null;
@@ -123,7 +58,80 @@ function show_result()
 
     async->event_loop();
 }
+/////////////////////// End of sme house-keeping code ///////////////////////////
 
+/////////////////////// Monochrome implementation //////////////////////////////
+
+/////// Single function
+function monochrome(img : Image)
+{
+    var pixs : Vector<int32> = img.getAllPixels();
+
+    for(var i = 0; i < pixs.size(); ++i)
+    {
+        var p : int32 = pixs.get(i);
+        var r : float32 = (p & 0xFF) / 255.0;
+        var g : float32 = ((p >> 8) & 0xFF) / 255.0;
+        var b : float32 = ((p >> 16) & 0xFF) / 255.0;
+        var a : int32 = p & 0xFF000000;
+
+        var mono : float32 = (0.2125 * r) + (0.7154 * g) + (0.0721 * b);
+        var mono_int : int32 = cast<int32>(mono * 255);
+        var final : int32 = a | mono_int | (mono_int << 8) | (mono_int << 16);
+
+        pixs.set(i, final);
+    }
+
+    img.setAllPixels(pixs);
+}
+
+/////// Async per pixel
+task mono_pixel(pixs : Vector<int32>, i : int32)
+{
+    if(i == pixs.size())
+        return;
+
+    var job = lambda() : void
+    {
+        println("mono_pixel: \{i}");
+
+        var p : int32 = pixs.get(i);
+        var r : float32 = (p & 0xFF) / 255.0;
+        var g : float32 = ((p >> 8) & 0xFF) / 255.0;
+        var b : float32 = ((p >> 16) & 0xFF) / 255.0;
+        var a : int32 = p & 0xFF000000;
+
+        var mono : float32 = (0.2125 * r) + (0.7154 * g) + (0.0721 * b);
+        var mono_int : int32 = cast<int32>(mono * 255);
+        var final : int32 = a | mono_int | (mono_int << 8) | (mono_int << 16);
+
+        pixs.set(i, final);
+    };
+
+    flow->
+    {
+        job();
+        mono_pixel(pixs, ++i);
+    }
+}
+
+task async_monochrome(img : Image)
+{
+    var pixs : Vector<int32> = img.getAllPixels();
+
+    var size = pixs.size();
+    println("total pixels: \{size}");
+
+    flow ->
+    {
+        mono_pixel(pixs, 0);
+    }
+
+    img.setAllPixels(pixs);
+}
+
+/////// Async per given segment
+task
 
 @entry
 task mono_function()
@@ -143,6 +151,18 @@ task mono_async_per_pixel()
     flow ->
     {
         async_monochrome(g_img);
+    }
+
+    show_result();
+}
+
+@entry
+task mono_async_per_segment()
+{
+    init_and_load_image();
+
+    flow ->
+    {
     }
 
     show_result();
