@@ -7,7 +7,7 @@ if test -z $2
 then
     target=$PWD/awesome.png
 else
-    target=$2
+    target=$PWD/$2
 fi
 
 case $impl in
