@@ -121,8 +121,6 @@ task async_monochrome(img : Image)
     var pixs : Vector<int32> = img.getAllPixels();
 
     var size = pixs.size();
-    println("total pixels: \{size}");
-
     flow ->
     {
         mono_pixel(pixs, 0);
@@ -150,10 +148,13 @@ task async_segment_monochrome(img : Image)
 
     flow ->
     {
-        mono_segment(pixs,         0, total / 4);
-        mono_segment(pixs, total / 4, total / 2);
-        mono_segment(pixs, total / 2, total    );
+        mono_segment(pixs,         0    , total / 4    );
+        mono_segment(pixs, total / 4    , total / 2    );
+        mono_segment(pixs, total / 2    , total * 3 / 4);
+        mono_segment(pixs, total * 3 / 4, total        );
     }
+
+    img.setAllPixels(pixs);
 }
 
 @entry
