@@ -37,9 +37,14 @@ task event_loop()
     var handle_event = lambda() : void
     {
         if(g_app.isQuit())
+        {
             exit(0);
+        }
         else
+        {
             g_app.handleEvent();
+            g_window.showImage(g_img);
+        }
 
         async->handle_event();
     };
@@ -49,8 +54,6 @@ task event_loop()
 
 function show_result()
 {
-    g_window.showImage(g_img);
-
     async->event_loop();
 }
 /////////////////////// End of sme house-keeping code ///////////////////////////
