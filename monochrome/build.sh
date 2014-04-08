@@ -21,7 +21,7 @@ thor)
 
     cd native
 
-    g++ -I../dep/system.bundle/src -std=c++11 -fPIC -g -c imgutil.cpp
+    g++ -I../dep/system.bundle/src -std=c++11 -fPIC -g -c application.cpp window.cpp image.cpp
 
     cd ..
 
