@@ -103,13 +103,17 @@ int main(int argc, char *argv[])
                 case SDL_QUIT:
                     done = 1;
                     break;
+
+                //refresh whatever happened to the window. I'm just too lazy to handle each in detail...
+                case SDL_WINDOWEVENT:
+                    draw_background(renderer, w, h);
+                    SDL_RenderCopy(renderer, texture, NULL, NULL);
+                    SDL_RenderPresent(renderer);
+
                 default:
                     break;
             }
         }
-        draw_background(renderer, w, h);
-        SDL_RenderCopy(renderer, texture, NULL, NULL);
-        SDL_RenderPresent(renderer);
 
         SDL_Delay(100);
     }
