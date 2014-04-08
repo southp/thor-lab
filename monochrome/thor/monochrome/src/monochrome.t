@@ -37,7 +37,8 @@ function init_and_load_image()
 
 task event_loop()
 {
-    var handle_event = lambda() : void{
+    var handle_event = lambda() : void
+    {
         if(g_window.isQuit())
         {
             finalize();
@@ -94,37 +95,72 @@ function monochrome(img : Image)
 }
 
 /////// Async per pixel
-task mono_pixel(pixs : Vector<int32>, i : int32)
-{
-    if(i == pixs.size())
-        return;
 
-    var job = lambda() : void
-    {
-        var p : int32 = pixs.get(i);
-        var mono_p = mono_value(p);
+/*task mono_pixel(pixs : Vector<int32>, i : int32)*/
+/*{*/
+/*    if(i == pixs.size())*/
+/*        return;*/
+/**/
+/*    var job = lambda() : void*/
+/*    {*/
+/*        var p : int32 = pixs.get(i);*/
+/*        var mono_p = mono_value(p);*/
+/**/
+/*        pixs.set(i, mono_p);*/
+/*    };*/
+/**/
+/*    flow ->*/
+/*    {*/
+/*        job();*/
+/*        mono_pixel(pixs, ++i);*/
+/*    }*/
+/*}*/
 
-        pixs.set(i, mono_p);
-    };
-
-    flow->
-    {
-        job();
-        mono_pixel(pixs, ++i);
-    }
-}
+var total_pixel : int32 = 0;
+var counter     : int32 = 0;
 
 task async_pixel_monochrome(img : Image)
 {
     var pixs : Vector<int32> = img.getAllPixels();
 
-    var size = pixs.size();
-    flow ->
+    total_pixel = pixs.size();
+    for(var i = 0; i < total_pixel; ++i)
     {
-        mono_pixel(pixs, 0);
+        async ->
+        {
+            var p      : int32 = pixs.get(i);
+            var mono_p : int32 = mono_value(p);
+
+            pixs.set(i, mono_p);
+
+            atomic ->
+            {
+                ++counter;
+            }
+        }
     }
 
-    img.setAllPixels(pixs);
+    var check_finish = lambda() : void
+    {
+        var finish : bool = false;
+
+        atomic ->
+        {
+            finish = counter == total_pixel;
+        }
+
+        if(finish)
+        {
+            img.setAllPixels(pixs);
+            show_result();
+        }
+        else
+        {
+            async -> check_finish();
+        }
+    };
+
+    async -> check_finish();
 }
 
 /////// Async per given segment
@@ -170,12 +206,9 @@ task mono_async_per_pixel()
 {
     init_and_load_image();
 
-    flow ->
-    {
-        async_pixel_monochrome(g_img);
-    }
+    async -> async_pixel_monochrome(g_img);
 
-    show_result();
+    // show_result();
 }
 
 @entry
