@@ -92,27 +92,6 @@ function monochrome(img : Image)
 }
 
 /////// Async per pixel
-
-/*task mono_pixel(pixs : Vector<int32>, i : int32)*/
-/*{*/
-/*    if(i == pixs.size())*/
-/*        return;*/
-/**/
-/*    var job = lambda() : void*/
-/*    {*/
-/*        var p : int32 = pixs.get(i);*/
-/*        var mono_p = mono_value(p);*/
-/**/
-/*        pixs.set(i, mono_p);*/
-/*    };*/
-/**/
-/*    flow ->*/
-/*    {*/
-/*        job();*/
-/*        mono_pixel(pixs, ++i);*/
-/*    }*/
-/*}*/
-
 var total_pixel : int32 = 0;
 var counter     : int32 = 0;
 
