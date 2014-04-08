@@ -12,7 +12,8 @@ class Window
 
     public function showImage(img : Image) : void;
 
-    private var _ptr_to_window : thor.unmanaged.ptr_<int8>;
-    private var _ptr_to_render : thor.unmanaged.ptr_<int8>;
+    private var _ptr_to_window  : thor.unmanaged.ptr_<int8>;
+    private var _ptr_to_render  : thor.unmanaged.ptr_<int8>;
+    private var _ptr_to_texture : thor.unmanaged.ptr_<int8>;
 }
 
