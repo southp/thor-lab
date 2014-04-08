@@ -136,6 +136,7 @@ int main(int argc, char *argv[])
                             break;
                     }
                     break;
+
                 case SDL_QUIT:
                     done = 1;
                     break;
@@ -145,6 +146,7 @@ int main(int argc, char *argv[])
                     draw_background(renderer, w, h);
                     SDL_RenderCopy(renderer, img_texture, NULL, NULL);
                     SDL_RenderPresent(renderer);
+                    break;
 
                 default:
                     break;
