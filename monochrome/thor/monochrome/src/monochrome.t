@@ -3,19 +3,16 @@ import .= thor.container;
 
 /////////////////////// Some house-keeping code ///////////////////////////
 
+var g_app    : Application = null;
 var g_window : Window = null;
 var g_img    : Image  = null;
 
 function init_and_load_image()
 {
-    if(!initialize())
-    {
-        println("Failed to initialize!");
-        exit(-1);
-    }
+    g_app    = new Application();
+    g_window = new Window();
+    g_img    = new Image;
 
-    g_window = new Window(0, 0);
-    g_img = new Image;
     var flag = new Flag;
     var options = flag.getRaw();
 
@@ -26,8 +23,8 @@ function init_and_load_image()
     }
 
     var img_path : String = options.get(0);
-
     println(img_path);
+
     if(!g_img.load(img_path))
     {
         println("Failed to load image: \{img_path}");
@@ -39,13 +36,10 @@ task event_loop()
 {
     var handle_event = lambda() : void
     {
-        if(g_window.isQuit())
-        {
-            finalize();
+        if(g_app.isQuit())
             exit(0);
-        }
         else
-            g_window.handleEvent();
+            g_app.handleEvent();
 
         async->handle_event();
     };

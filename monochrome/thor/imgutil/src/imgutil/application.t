@@ -8,6 +8,8 @@ class Application
 
     public function handleEvent() : void;
 
+    public function isQuit() : bool;
+
     private var _quit : bool;
 }
 
