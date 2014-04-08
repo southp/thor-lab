@@ -32,9 +32,9 @@ function init_and_load_image()
     }
 }
 
-task event_loop()
+function show_result()
 {
-    var handle_event = lambda() : void
+    var refresh_image = lambda() : void
     {
         if(g_app.isQuit())
         {
@@ -46,15 +46,10 @@ task event_loop()
             g_window.showImage(g_img);
         }
 
-        async->handle_event();
+        async->refresh_image();
     };
 
-    async->handle_event();
-}
-
-function show_result()
-{
-    async->event_loop();
+    async->refresh_image();
 }
 /////////////////////// End of sme house-keeping code ///////////////////////////
 
