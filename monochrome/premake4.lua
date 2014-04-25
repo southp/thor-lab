@@ -18,6 +18,7 @@ solution "monochrome"
         flags {
             "Optimize"
         }
+    include "util"
 
     include "c"
 

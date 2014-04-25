@@ -7,6 +7,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+#include "timer.h"
+
 using namespace cv;
 
 int main( int argc, char** argv )
@@ -23,7 +25,10 @@ int main( int argc, char** argv )
     }
 
     Mat gray_image;
-    cvtColor( image, gray_image, CV_BGR2GRAY );
+
+    begin_timing();
+        cvtColor( image, gray_image, CV_BGR2GRAY );
+    end_timing();
 
     namedWindow( imageName, CV_WINDOW_AUTOSIZE );
     namedWindow( "Gray image", CV_WINDOW_AUTOSIZE );

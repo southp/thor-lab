@@ -54,7 +54,7 @@ opencv)
 
 cuda)
     cd cuda
-    nvcc cuda_monochrome.cu -o ../bin/cuda_mono -lSDL2 -lSDL2_image
+    nvcc -I../util/ -L../bin/ cuda_monochrome.cu -o ../bin/cuda_mono -lSDL2 -lSDL2_image -lutil -v
 
     ;;
 

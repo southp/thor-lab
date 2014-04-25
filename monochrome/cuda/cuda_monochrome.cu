@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#include <time.h>
 
 #include <cuda_runtime.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+
+#include "timer.h"
 
 __global__
 void monochrome(uint32_t *pixs, int w, int h)
@@ -100,12 +101,10 @@ int main(int argc, char *argv[])
     block_per_grid.x = w / thrd_per_block.x;
     block_per_grid.y = h / thrd_per_block.y;
 
-    clk = clock();
-
-    monochrome<<<block_per_grid, thrd_per_block, 0>>>(dev_buf, w, h);
-    cudaDeviceSynchronize();
-
-    printf("*** Time: %f\n", (float)(clock() - clk) / CLOCKS_PER_SEC);
+    begin_timing();
+        monochrome<<<block_per_grid, thrd_per_block, 0>>>(dev_buf, w, h);
+        cudaDeviceSynchronize();
+    end_timing();
 
     cudaMemcpy(img_surface->pixels, dev_buf, size, cudaMemcpyDeviceToHost);
     cudaFree(dev_buf);
